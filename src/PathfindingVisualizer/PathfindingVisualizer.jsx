@@ -105,6 +105,7 @@ function PathfindingVisualizer() {
       isVisited: false,
       isWall: false,
       previousNode: null,
+      manhattenD: 0,
     };
   }
 
