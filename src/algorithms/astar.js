@@ -1,7 +1,7 @@
 export function astar(grid, startNode, finishNode) {
     const visitedNodesInOrder = [];
     startNode.distance = 0;
-    const unvisitedNodes = getAllNodes(grid);
+    const unvisitedNodes = getAllNodes(grid, finishNode);
     while (!!unvisitedNodes.length) {
       sortNodesByDistance(unvisitedNodes);
       const closestNode = unvisitedNodes.shift();
@@ -16,7 +16,7 @@ export function astar(grid, startNode, finishNode) {
   }
   
   function sortNodesByDistance(unvisitedNodes) {
-    unvisitedNodes.sort((nodeA, nodeB) => nodeA.distance - nodeB.distance);
+    unvisitedNodes.sort((nodeA, nodeB) => (nodeA.distance + nodeA.manhattenD) - (nodeB.distance + nodeB.manhattenD));
   }
   
   function updateUnvisitedNeighbors(node, grid) {
@@ -37,17 +37,18 @@ export function astar(grid, startNode, finishNode) {
     return neighbors.filter(neighbor => !neighbor.isVisited);
   }
   
-  function getAllNodes(grid) {
+  function getAllNodes(grid, finishNode) {
     const nodes = [];
     for (const row of grid) {
       for (const node of row) {
+        node.manhattenD = 2 * (Math.abs(finishNode.row - node.row) + Math.abs(finishNode.col - node.col));
         nodes.push(node);
       }
     }
     return nodes;
   }
-  
-  export function getNodesInShortestPathOrder(finishNode) {
+
+  export function getNodesInShortestPathOrder2(finishNode) {
     const nodesInShortestPathOrder = [];
     let currentNode = finishNode;
     while (currentNode !== null) {

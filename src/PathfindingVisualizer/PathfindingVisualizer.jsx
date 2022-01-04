@@ -1,11 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import Node from './Node/Node';
 import {dijkstra, getNodesInShortestPathOrder} from '../algorithms/dijkstra';
+import {astar, getNodesInShortestPathOrder2} from '../algorithms/astar';
+
 
 import './PathfindingVisualizer.css';
 
-const START_NODE_ROW = 10;
-const START_NODE_COL = 15;
+const START_NODE_ROW = 1;
+const START_NODE_COL = 2;
 const FINISH_NODE_ROW = 15;
 const FINISH_NODE_COL = 25;
 
@@ -18,7 +20,7 @@ function PathfindingVisualizer() {
     setTheGrid(...thegrid, initialgrid);
   },[])
 
-  function animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder) {
+  function animatePather(visitedNodesInOrder, nodesInShortestPathOrder) {
     for (let i = 0; i <= visitedNodesInOrder.length; i++) {
       if (i === visitedNodesInOrder.length) {
         setTimeout(() => {
@@ -50,15 +52,24 @@ function PathfindingVisualizer() {
     const finishNode = grid1[FINISH_NODE_ROW][FINISH_NODE_COL];
     const visitedNodesInOrder = dijkstra(grid1, startNode, finishNode);
     const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
-    animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
+    animatePather(visitedNodesInOrder, nodesInShortestPathOrder);
+  }
+
+  function visualizeAStar() {
+    const grid1 = thegrid;
+    const startNode = grid1[START_NODE_ROW][START_NODE_COL];
+    const finishNode = grid1[FINISH_NODE_ROW][FINISH_NODE_COL];
+    const visitedNodesInOrder2 = astar(grid1, startNode, finishNode);
+    const nodesInShortestPathOrder2 = getNodesInShortestPathOrder2(finishNode);
+    animatePather(visitedNodesInOrder2, nodesInShortestPathOrder2);
   }
 
   const grid = thegrid;
   return (
     <>
-      <button onClick={() => visualizeDijkstra()}>
-        visualize me
-      </button>
+      <h4 className='header'>
+        <button onClick={() => visualizeAStar()}>Visualize</button>
+      </h4>
       <div className="grid">
         {grid.map((row, rowIdx) => {
           return (

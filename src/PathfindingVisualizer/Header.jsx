@@ -1,22 +1,21 @@
-import React, {useState, useEffect} from 'react';
-import './Header.css';
-import visualizeDijkstra from '../PathfindingVisualizer/PathfindingVisualizer';
+// import React, {useState, useEffect} from 'react';
+// import './Header.css';
 
-function Header() {
-    // const [click, setClick] = useState(true);
+// function Header() {
+//     const [click, setClick] = useState(true);
 
-    // useEffect(() => {
-    //     visualizeDijkstra();
-    // },[click])
+//     useEffect(() => {
+//         visualizeDijkstra();
+//     },[click])
 
-    return(
-        <>
-            <h4 className="header">
-                {/* <button onClick={() => setClick(prev => !prev)}>Visualize</button> */}
-            </h4>
-        </>
-    );
+//     return(
+//         <>
+//             <h4 className="header">
+//                 <button onClick={() => doSomething()}>Visualize</button>
+//             </h4>
+//         </>
+//     );
 
-}
+// }
 
-export default Header;
+// export default Header;
