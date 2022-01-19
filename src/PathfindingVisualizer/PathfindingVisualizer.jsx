@@ -13,6 +13,8 @@ const FINISH_NODE_COL = 25;
 
 function PathfindingVisualizer() {
   const [thegrid, setTheGrid] = useState([]);
+  const [mouseIsPressed, setMousePressed] = useState(false);
+  const [disabled, setDisabled] = useState(false);
 
 
   useEffect(() => {
@@ -20,33 +22,47 @@ function PathfindingVisualizer() {
     setTheGrid(...thegrid, initialgrid);
   },[])
 
+  function handleMouseDown(row, col) {
+    const newGrid = getNewGridWithWallToggled(thegrid, row, col);
+    setTheGrid({...thegrid, newGrid});
+    setMousePressed(!mouseIsPressed);
+  }
+
   function animatePather(visitedNodesInOrder, nodesInShortestPathOrder) {
     for (let i = 0; i <= visitedNodesInOrder.length; i++) {
+
       if (i === visitedNodesInOrder.length) {
         setTimeout(() => {
           animateShortestPath(nodesInShortestPathOrder);
         }, 10 * i);
         return;
       }
+
       setTimeout(() => {
         const node = visitedNodesInOrder[i];
         document.getElementById(`node-${node.row}-${node.col}`).className =
           'node node-visited';
       }, 10 * i);
-    }
+    };
   }
 
   function animateShortestPath(nodesInShortestPathOrder) {
     for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
+
       setTimeout(() => {
         const node = nodesInShortestPathOrder[i];
+
         document.getElementById(`node-${node.row}-${node.col}`).className =
           'node node-shortest-path';
+        if (i + 1 === nodesInShortestPathOrder.length) {
+          setDisabled(false);
+        }
       }, 50 * i);
     }
   }
 
   function visualizeDijkstra() {
+    setDisabled(true);
     const grid1 = thegrid;
     const startNode = grid1[START_NODE_ROW][START_NODE_COL];
     const finishNode = grid1[FINISH_NODE_ROW][FINISH_NODE_COL];
@@ -56,43 +72,82 @@ function PathfindingVisualizer() {
   }
 
   function visualizeAStar() {
-    const grid1 = thegrid;
-    const startNode = grid1[START_NODE_ROW][START_NODE_COL];
-    const finishNode = grid1[FINISH_NODE_ROW][FINISH_NODE_COL];
-    const visitedNodesInOrder2 = astar(grid1, startNode, finishNode);
+    setDisabled(true);
+    const grid2 = thegrid;
+    const startNode = grid2[START_NODE_ROW][START_NODE_COL];
+    const finishNode = grid2[FINISH_NODE_ROW][FINISH_NODE_COL];
+    const visitedNodesInOrder2 = astar(grid2, startNode, finishNode);
     const nodesInShortestPathOrder2 = getNodesInShortestPathOrder2(finishNode);
     animatePather(visitedNodesInOrder2, nodesInShortestPathOrder2);
   }
 
   const grid = thegrid;
+  const mousePressed = mouseIsPressed;
   return (
     <>
-      <h4 className='header'>
-        <button onClick={() => visualizeAStar()}>Visualize</button>
+      <h4 className="header">
+        <button disabled={disabled} className={`button ${disabled ? 'disabled-button' : ''}`} onClick={() => visualizeAStar()}>Visualize A*</button>
+        <button disabled={disabled} className={`button ${disabled ? 'disabled-button' : ''}`} onClick={() => visualizeDijkstra()}>Visualize Dijkstra</button>
+        <button disabled={disabled} className={`button ${disabled ? 'disabled-button' : ''}`} onClick={() => clearBoard()}>Clear Board</button>
+        <button className="button" onClick={() => classesBoard()}>Classes of Board</button>
       </h4>
-      <div className="grid">
+      <div className="grid background-color">
         {grid.map((row, rowIdx) => {
           return (
             <div key={rowIdx}>
               {row.map((node, nodeIdx) => {
-                const {row, col, isFinish, isStart} = node;
+                const {row, col, isFinish, isStart, isWall} = node;
                 return (
                   <Node
                     key={nodeIdx}
                     col={col}
                     isFinish={isFinish}
                     isStart={isStart}
-                    row={row}></Node>
+                    row={row}
+                    isWall={isWall}
+                    mouseIsPressed={mousePressed}></Node>
                 );
               })}
             </div>
           );
         })}
       </div>
+      <div className="background"></div>
     </>
   );
 
+  function clearWalls() {
+    //come back to this
+  }
 
+  function classesBoard() {
+    for (const row of thegrid) {
+      for (const node of row) {
+        let nodeClassName = document.getElementById(`node-${node.row}-${node.col}`).className;
+      }
+    }
+  }
+
+  function clearBoard() {
+    const newBoardGrid = thegrid;
+    for (const row of thegrid) {
+      for (const node of row) {
+        let nodeClassName = document.getElementById(`node-${node.row}-${node.col}`).className;
+        
+        document.getElementById(`node-${node.row}-${node.col}`).className = 'node';
+        node.manhattenD = 0;
+        node.isVisited = false;
+        node.distance = Infinity;
+        node.previousNode = null;
+
+
+        if (nodeClassName !== 'node node-start') {
+          document.getElementById(`node-${node.row}-${node.col}`).className = 'node';
+          
+        }
+      }
+    }
+  }
 
   function getInitialGrid() {
     const grid = [];
@@ -120,8 +175,8 @@ function PathfindingVisualizer() {
     };
   }
 
-  /*const getNewGridWithWallToggled = (grid, row, col) => {
-    const newGrid = grid.slice();
+  function getNewGridWithWallToggled(grid, row, col) {
+    const newGrid = thegrid.slice();
     const node = newGrid[row][col];
     const newNode = {
       ...node,
@@ -129,7 +184,7 @@ function PathfindingVisualizer() {
     };
     newGrid[row][col] = newNode;
     return newGrid;
-  };*/
+  };
 }
 
 export default PathfindingVisualizer;

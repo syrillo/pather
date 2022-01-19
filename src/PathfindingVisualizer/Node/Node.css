@@ -1,7 +1,7 @@
 .node {
   width: 25px;
   height: 25px;
-  outline: 1px solid rgb(175, 216, 248);
+  outline: 1px solid rgb(177, 185, 192);
   display: inline-block;
 }
 
@@ -11,6 +11,11 @@
 
 .node-start {
   background-color: green;
+}
+
+.node-isWall {
+  background-color: gray;
+  border: black;
 }
 
 .node-visited {

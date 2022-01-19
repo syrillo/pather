@@ -9,11 +9,14 @@ export default class Node extends Component {
       isFinish,
       isStart,
       row,
+      isWall,
     } = this.props;
     const extraClassName = isFinish
       ? 'node-finish'
       : isStart
       ? 'node-start'
+      : isWall
+      ? 'node-isWall'
       : '';
 
     return (

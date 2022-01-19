@@ -2,7 +2,9 @@ export function astar(grid, startNode, finishNode) {
     const visitedNodesInOrder = [];
     startNode.distance = 0;
     const unvisitedNodes = getAllNodes(grid, finishNode);
-    while (!!unvisitedNodes.length) {
+    
+    
+    while (unvisitedNodes.length) {
       sortNodesByDistance(unvisitedNodes);
       const closestNode = unvisitedNodes.shift();
       //Need to Enable Walls
