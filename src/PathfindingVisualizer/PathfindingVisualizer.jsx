@@ -59,7 +59,6 @@ function PathfindingVisualizer() {
         setOldCol(col);
       }
 
-      console.log(mouseIsPressed);
     }
   }
 
@@ -99,7 +98,6 @@ function PathfindingVisualizer() {
           setFinishRow(row);
           setFinishCol(col);
           console.log('Mouse Enter');
-          console.log(mouseIsPressed);
 
         } else if (isWallNode) {
 
@@ -117,6 +115,8 @@ function PathfindingVisualizer() {
     if (1 === 1) {
       
       setMouseIsPressed(false);
+      // let node = document.getElementById(`node-${row}-${col}`);
+      // node.removeEventListener('onmouseenter', handleMouseEnter);
 
       if(isStartNode) {
         const startNodeIs = !isStartNode;
@@ -130,12 +130,17 @@ function PathfindingVisualizer() {
         setFinishRow(row);
         setFinishCol(col);
         console.log('Mouse Up');
-        console.log(mouseIsPressed);
         
       } else if (isWallNode) {
         const wallNodeIs = !isWallNode;
         setIsWallNode(wallNodeIs);
       }
+    }
+  }
+
+  function handleMouseLeave(row, col) {
+    if (mouseIsPressed) {
+      console.log('Mouse Leave');
     }
   }
 
@@ -205,7 +210,7 @@ function PathfindingVisualizer() {
           return (
             <div key={rowIdx}>
               {row.map((node, nodeIdx) => {
-                const {row, col, isFinish, isStart, isWall, mouseIsPressed} = node;
+                const {row, col, isFinish, isStart, isWall} = node;
                 return (
                   <Node
                     key={nodeIdx}
@@ -216,7 +221,8 @@ function PathfindingVisualizer() {
                     isWall={isWall}
                     onMouseDown={(row, col) => handleMouseDown(row, col)}
                     onMouseEnter={(row, col) => handleMouseEnter(row, col)}
-                    onMouseUp={(row, col) => handleMouseUp(row, col)}></Node>
+                    onMouseUp={(row, col) => handleMouseUp(row, col)}
+                    onMouseLeave={(row, col) => handleMouseLeave(row, col)}></Node>
                 );
               })}
             </div>
